@@ -20,5 +20,29 @@ namespace BackendTicketSystem.CustomModels
         public string StatusName { get; set; } = null!;
         public int Version { get; set; }
     }
+
+    public class CreateProjectCustomModel
+    {
+        public string Name { get; set; } = null!;
+        public int ProjectTypeId { get; set; }
+        public int ProjectPackageId { get; set; }
+        public string WebsiteUrl { get; set; } = null!;
+        public string ApplicationName { get; set; } = null!;
+        public string DatabaseName { get; set; } = null!;
+        public short StatusId { get; set; }
+    }
+
+    public class UpdateProjectCustomModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = null!;
+        public int ProjectTypeId { get; set; }
+        public int ProjectPackageId { get; set; }
+        public string WebsiteUrl { get; set; } = null!;
+        public string ApplicationName { get; set; } = null!;
+        public string DatabaseName { get; set; } = null!;
+        public short StatusId { get; set; }
+        public int Version { get; set; }
+    }
 }
 
