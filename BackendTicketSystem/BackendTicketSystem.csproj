@@ -23,5 +23,9 @@
     <None Remove="Microsoft.EntityFrameworkCore.SqlServer" />
     <None Remove="Microsoft.EntityFrameworkCore.Design" />
     <None Remove="Microsoft.EntityFrameworkCore.Tools" />
+    <None Remove="CustomModels\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CustomModels\" />
   </ItemGroup>
 </Project>
