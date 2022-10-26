@@ -12,7 +12,7 @@ namespace BackendTicketSystem.Controllers
     [ApiController]
     public class ProjectController : ControllerBase
     {
-        private readonly BackendTicketSystemContext _db = new BackendTicketSystemContext();
+        private BackendTicketSystemContext _db = new BackendTicketSystemContext();
 
         [HttpGet("Projects")]
         public IEnumerable<ProjectCustomModel>? Projects(int skip = 0, int limit = 10)
@@ -42,10 +42,9 @@ namespace BackendTicketSystem.Controllers
             return result;
         }
 
-        [HttpPost("categoryCreate")]
+        [HttpPost("projectCreate")]
         public string Post([FromBody] CreateProjectCustomModel project)
         {
-
             try
             {
                 // check duplicate name
@@ -70,6 +69,7 @@ namespace BackendTicketSystem.Controllers
                     StatusId = project.StatusId
                 };
                 _db.Projects.Add(newProject);
+                _db.SaveChanges();
                 return "create successfully";
             }
             catch (Exception ex)
@@ -78,7 +78,7 @@ namespace BackendTicketSystem.Controllers
             }
         }
 
-        [HttpPut("categoryUpdate")]
+        [HttpPut("projectUpdate")]
         public string Put([FromBody] UpdateProjectCustomModel project)
         {
             try
@@ -104,7 +104,6 @@ namespace BackendTicketSystem.Controllers
                     //currentProject.ModifiedBy = DefaultFuntion.GetCurrentUserId();
                     currentProject.ModifiedDate = GlobalFunction.GetCurrentDateTime();
                     currentProject.Version = project.Version + 1;
-                    //_db.Entry(currentProject).State = System.Data.Entity.EntityState.Modified;
                     _db.SaveChanges();
                     return "update successfully";
                 }
