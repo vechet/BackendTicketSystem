@@ -4,6 +4,7 @@ using BackendTicketSystem.Helpers;
 using BackendTicketSystem.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
 using Enum = BackendTicketSystem.Helpers.Enum;
 
 namespace BackendTicketSystem.Controllers
@@ -15,42 +16,64 @@ namespace BackendTicketSystem.Controllers
         private BackendTicketSystemContext _db = new BackendTicketSystemContext();
 
         [HttpGet("Projects")]
-        public IEnumerable<ProjectCustomModel>? Projects(int skip = 0, int limit = 10)
-        {
-            var projectList = _db.Projects.Where(x => x.Status.KeyName == "Active");
-
-            var result = projectList.Select(x => new ProjectCustomModel
-            {
-                Id = x.Id,
-                Name = x.Name,
-                ProjectTypeId = x.ProjectTypeId,
-                ProjectTypeName = x.ProjectType.Name,
-                ProjectPackageId = x.ProjectPackageId,
-                ProjectPackageName = x.ProjectPackage.Name,
-                WebsiteUrl = x.WebsiteUrl,
-                ApplicationName = x.ApplicationName,
-                DatabaseName = x.DatabaseName,
-                CreatedBy = x.CreatedBy,
-                CreatedDate = x.CreatedDate,
-                ModifiedBy = x.ModifiedBy,
-                ModifiedDate = x.ModifiedDate,
-                StatusId = x.StatusId,
-                StatusName = x.Status.Name,
-                Version = x.Version
-            }).OrderByDescending(x => x.Id).Skip(skip).Take(limit);
-
-            return result;
-        }
-
-        [HttpPost("projectCreate")]
-        public string Post([FromBody] CreateProjectCustomModel project)
+        public ApiOutput<List<ProjectCustomModel>> Projects(int skip = 0, int limit = 10)
         {
             try
             {
+                var result = new ApiOutput<List<ProjectCustomModel>>();
+
+                var projectList = _db.Projects.Where(x => x.Status.KeyName == "Active");
+
+                var projects = projectList.Select(x => new ProjectCustomModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    ProjectTypeId = x.ProjectTypeId,
+                    ProjectTypeName = x.ProjectType.Name,
+                    ProjectPackageId = x.ProjectPackageId,
+                    ProjectPackageName = x.ProjectPackage.Name,
+                    WebsiteUrl = x.WebsiteUrl,
+                    ApplicationName = x.ApplicationName,
+                    DatabaseName = x.DatabaseName,
+                    CreatedBy = x.CreatedBy,
+                    CreatedDate = x.CreatedDate,
+                    ModifiedBy = x.ModifiedBy,
+                    ModifiedDate = x.ModifiedDate,
+                    StatusId = x.StatusId,
+                    StatusName = x.Status.Name,
+                    Version = x.Version
+                }).OrderByDescending(x => x.Id).Skip(skip).Take(limit).ToList();
+
+                result.Success = true;
+                result.Message = "Fetch data successfully!";
+                result.Data = projects;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var result = new ApiOutput<List<ProjectCustomModel>>();
+                result.Success = false;
+                result.Message = ex.Message.ToString();
+                result.Data = null;
+                return result;
+            }
+        }
+
+        [HttpPost("projectCreate")]
+        public ApiOutput<Project> Post([FromBody] CreateProjectCustomModel project)
+        {
+
+            try
+            {
+                var result = new ApiOutput<Project>();
+
                 // check duplicate name
                 if (_db.Projects.Any(x => x.Name.ToLower() == project.Name.ToLower()))
                 {
-                    return string.Format(Resource.ValidationMessage_Duplicate, Resource.Name);
+                    result.Success = false;
+                    result.Message = string.Format(Resource.ValidationMessage_Duplicate, Resource.Name);
+                    result.Data = null;
+                    return result;
                 }
 
                 //new project
@@ -70,26 +93,39 @@ namespace BackendTicketSystem.Controllers
                 };
                 _db.Projects.Add(newProject);
                 _db.SaveChanges();
-                return "create successfully";
+
+                result.Success = true;
+                result.Message = "Created successfully!";
+                result.Data = newProject;
+                return result;
             }
             catch (Exception ex)
             {
-                return ex.Message.ToString();
+                var result = new ApiOutput<Project>();
+                result.Success = false;
+                result.Message = ex.Message.ToString();
+                result.Data = null;
+                return result;
             }
         }
 
         [HttpPut("projectUpdate")]
-        public string Put([FromBody] UpdateProjectCustomModel project)
+        public ApiOutput<UpdateProjectCustomModel> Put([FromBody] UpdateProjectCustomModel project)
         {
             try
             {
+                var result = new ApiOutput<UpdateProjectCustomModel>();
+
                 var currentProject = _db.Projects.Find(project.Id);
                 if (currentProject.Version == project.Version)
                 {
                     // check duplicate name
                     if (_db.Projects.Any(x => x.Name.ToLower() == currentProject.Name.ToLower() && x.Id != project.Id))
                     {
-                        return string.Format(Resource.ValidationMessage_Duplicate, Resource.Name);
+                        result.Success = false;
+                        result.Message = string.Format(Resource.ValidationMessage_Duplicate, Resource.Name);
+                        result.Data = null;
+                        return result;
                     }
 
                     // update project
@@ -105,13 +141,25 @@ namespace BackendTicketSystem.Controllers
                     currentProject.ModifiedDate = GlobalFunction.GetCurrentDateTime();
                     currentProject.Version = project.Version + 1;
                     _db.SaveChanges();
-                    return "update successfully";
+
+                    result.Success = true;
+                    result.Message = "Updated successfully!";
+                    result.Data = new UpdateProjectCustomModel { Id = currentProject.Id};
+                    return result;
                 }
-                return Resource.ValidationMessage_WrongRecordVersion;
+
+                result.Success = false;
+                result.Message = Resource.ValidationMessage_WrongRecordVersion;
+                result.Data = null;
+                return result;
             }
             catch (Exception ex)
             {
-                return ex.Message.ToString();
+                var result = new ApiOutput<UpdateProjectCustomModel>();
+                result.Success = false;
+                result.Message = ex.Message.ToString();
+                result.Data = null;
+                return result;
             }
         }
 

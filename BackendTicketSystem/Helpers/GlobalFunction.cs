@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 namespace BackendTicketSystem.Helpers
 {
     public class GlobalFunction
@@ -11,6 +12,15 @@ namespace BackendTicketSystem.Helpers
             return TimeZoneInfo.ConvertTime(now, local, destinationTimeZone);
         }
 
+        public static object RenderErrorMessageFromState(ModelStateDictionary modelState)
+        {
+            return new
+            {
+                error = "Info(s):\n" + string.Join("\n- ", modelState.Values
+                                      .SelectMany(x => x.Errors)
+                                       .Select(x => x.ErrorMessage))
+            };
+        }
     }
 }
 
