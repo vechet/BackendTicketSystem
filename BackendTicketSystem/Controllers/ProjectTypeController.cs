@@ -16,7 +16,7 @@ namespace BackendTicketSystem.Controllers
     [ApiController]
     public class ProjectTypeController : ControllerBase
     {
-        private BackendTicketSystemContext _db = new BackendTicketSystemContext();
+        private readonly BackendTicketSystemContext _db = new BackendTicketSystemContext();
 
         [HttpGet("ProjectTypes")]
         public ApiOutput<List<ProjectTypeCustomModel>> ProjectTypes(int skip = 0, int limit = 10)

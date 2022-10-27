@@ -16,7 +16,7 @@ namespace BackendTicketSystem.Controllers
     [ApiController]
     public class ProjectPackageController : ControllerBase
     {
-        private BackendTicketSystemContext _db = new BackendTicketSystemContext();
+        private readonly BackendTicketSystemContext _db = new BackendTicketSystemContext();
 
         [HttpGet("ProjectPackages")]
         public ApiOutput<List<ProjectPackageCustomModel>> ProjectPackages(int skip = 0, int limit = 10)

@@ -16,7 +16,7 @@ namespace BackendTicketSystem.Controllers
     [ApiController]
     public class TicketController : ControllerBase
     {
-        private BackendTicketSystemContext _db = new BackendTicketSystemContext();
+        private readonly BackendTicketSystemContext _db = new BackendTicketSystemContext();
 
         [HttpGet("Tickets")]
         public ApiOutput<List<TicketCustomModel>> Tickets(int skip = 0, int limit = 10)

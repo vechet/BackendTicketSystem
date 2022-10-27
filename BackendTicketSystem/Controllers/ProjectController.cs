@@ -13,7 +13,7 @@ namespace BackendTicketSystem.Controllers
     [ApiController]
     public class ProjectController : ControllerBase
     {
-        private BackendTicketSystemContext _db = new BackendTicketSystemContext();
+        private readonly BackendTicketSystemContext _db = new BackendTicketSystemContext();
 
         [HttpGet("Projects")]
         public ApiOutput<List<ProjectCustomModel>> Projects(int skip = 0, int limit = 10)
