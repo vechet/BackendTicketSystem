@@ -60,12 +60,12 @@ namespace BackendTicketSystem.Controllers
         }
 
         [HttpPost("projectCreate")]
-        public ApiOutput<Project> Post([FromBody] CreateProjectCustomModel project)
+        public ApiOutput<CreateProjectCustomModel> Post([FromBody] CreateProjectCustomModel project)
         {
 
             try
             {
-                var result = new ApiOutput<Project>();
+                var result = new ApiOutput<CreateProjectCustomModel>();
 
                 // check duplicate name
                 if (_db.Projects.Any(x => x.Name.ToLower() == project.Name.ToLower()))
@@ -96,12 +96,12 @@ namespace BackendTicketSystem.Controllers
 
                 result.Success = true;
                 result.Message = "Created successfully!";
-                result.Data = newProject;
+                result.Data = project;
                 return result;
             }
             catch (Exception ex)
             {
-                var result = new ApiOutput<Project>();
+                var result = new ApiOutput<CreateProjectCustomModel>();
                 result.Success = false;
                 result.Message = ex.Message.ToString();
                 result.Data = null;
@@ -144,7 +144,7 @@ namespace BackendTicketSystem.Controllers
 
                     result.Success = true;
                     result.Message = "Updated successfully!";
-                    result.Data = new UpdateProjectCustomModel { Id = currentProject.Id};
+                    result.Data = project;
                     return result;
                 }
 
