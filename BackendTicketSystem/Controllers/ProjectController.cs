@@ -59,7 +59,7 @@ namespace BackendTicketSystem.Controllers
             }
         }
 
-        [HttpPost("projectCreate")]
+        [HttpPost("ProjectCreate")]
         public ApiOutput<CreateProjectCustomModel> Post([FromBody] CreateProjectCustomModel project)
         {
 
@@ -109,7 +109,7 @@ namespace BackendTicketSystem.Controllers
             }
         }
 
-        [HttpPut("projectUpdate")]
+        [HttpPut("ProjectUpdate")]
         public ApiOutput<UpdateProjectCustomModel> Put([FromBody] UpdateProjectCustomModel project)
         {
             try
