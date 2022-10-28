@@ -1,7 +1,7 @@
 ﻿using System;
 namespace BackendTicketSystem.CustomModels
 {
-    public class ProjectTypeCustomModel
+    public class TicketTypeCustomModel
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
@@ -15,14 +15,14 @@ namespace BackendTicketSystem.CustomModels
         public int Version { get; set; }
     }
 
-    public class CreateProjectTypeCustomModel
+    public class CreateTicketTypeCustomModel
     {
         public string Name { get; set; } = null!;
         public string? Memo { get; set; }
         public short StatusId { get; set; }
     }
 
-    public class UpdateProjectTypeCustomModel
+    public class UpdateTicketTypeCustomModel
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
