@@ -30,7 +30,7 @@ namespace BackendTicketSystem.Controllers
                 var tickets = ticketList.Select(x => new TicketCustomModel
                 {
                     Id = x.Id,
-                    Summary = x.Summary,
+                    Subject = x.Subject,
                     Description =x.Description,
                     PriorityId = x.PriorityId,
                     PriorityName = x.Priority.Name,
@@ -72,7 +72,7 @@ namespace BackendTicketSystem.Controllers
                 var result = new ApiOutput<CreateTicketCustomModel>();
 
                 // check duplicate name
-                if (_db.Tickets.Any(x => x.Summary.ToLower() == ticket.Summary.ToLower()))
+                if (_db.Tickets.Any(x => x.Subject.ToLower() == ticket.Subject.ToLower()))
                 {
                     result.Success = false;
                     result.Message = string.Format(Resource.ValidationMessage_Duplicate, Resource.Name);
@@ -83,7 +83,7 @@ namespace BackendTicketSystem.Controllers
                 //new Ticket
                 var newTicket = new Ticket
                 {
-                    Summary = ticket.Summary,
+                    Subject = ticket.Subject,
                     Description = ticket.Description,
                     PriorityId=ticket.PriorityId,
                     ProjectId = ticket.ProjectId,
@@ -124,7 +124,7 @@ namespace BackendTicketSystem.Controllers
                 if (currentTicket.Version == ticket.Version)
                 {
                     // check duplicate name
-                    if (_db.Tickets.Any(x => x.Summary.ToLower() == currentTicket.Summary.ToLower() && x.Id != ticket.Id))
+                    if (_db.Tickets.Any(x => x.Subject.ToLower() == currentTicket.Subject.ToLower() && x.Id != ticket.Id))
                     {
                         result.Success = false;
                         result.Message = string.Format(Resource.ValidationMessage_Duplicate, Resource.Name);
@@ -133,7 +133,7 @@ namespace BackendTicketSystem.Controllers
                     }
 
                     // update Ticket
-                    currentTicket.Summary = ticket.Summary;
+                    currentTicket.Subject = ticket.Subject;
                     currentTicket.Description = ticket.Description;
                     currentTicket.PriorityId = ticket.PriorityId;
                     currentTicket.ProjectId = ticket.ProjectId;

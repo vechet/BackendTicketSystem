@@ -4,7 +4,7 @@ namespace BackendTicketSystem.CustomModels
     public class TicketCustomModel
     {
         public int Id { get; set; }
-        public string Summary { get; set; } = null!;
+        public string Subject { get; set; } = null!;
         public string Description { get; set; } = null!;
         public int PriorityId { get; set; }
         public string PriorityName { get; set; } = null!;
@@ -24,7 +24,7 @@ namespace BackendTicketSystem.CustomModels
 
     public class CreateTicketCustomModel
     {
-        public string Summary { get; set; } = null!;
+        public string Subject { get; set; } = null!;
         public string Description { get; set; } = null!;
         public int PriorityId { get; set; }
         public int ProjectId { get; set; }
@@ -36,7 +36,7 @@ namespace BackendTicketSystem.CustomModels
     public class UpdateTicketCustomModel
     {
         public int Id { get; set; }
-        public string Summary { get; set; } = null!;
+        public string Subject { get; set; } = null!;
         public string Description { get; set; } = null!;
         public int PriorityId { get; set; }
         public int ProjectId { get; set; }

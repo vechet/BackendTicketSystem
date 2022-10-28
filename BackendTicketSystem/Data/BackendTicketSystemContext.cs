@@ -230,7 +230,7 @@ namespace BackendTicketSystem.Data
 
                 entity.Property(e => e.StatusId).HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.Summary).HasMaxLength(100);
+                entity.Property(e => e.Subject).HasMaxLength(100);
 
                 entity.Property(e => e.Version).HasDefaultValueSql("((1))");
 
