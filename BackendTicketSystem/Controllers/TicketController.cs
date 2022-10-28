@@ -31,7 +31,6 @@ namespace BackendTicketSystem.Controllers
                 {
                     Id = x.Id,
                     Subject = x.Subject,
-                    Description =x.Description,
                     PriorityId = x.PriorityId,
                     PriorityName = x.Priority.Name,
                     ProjectId = x.ProjectId,
@@ -84,7 +83,6 @@ namespace BackendTicketSystem.Controllers
                 var newTicket = new Ticket
                 {
                     Subject = ticket.Subject,
-                    Description = ticket.Description,
                     PriorityId=ticket.PriorityId,
                     ProjectId = ticket.ProjectId,
                     TicketTypeId = ticket.TicketTypeId,
@@ -134,7 +132,6 @@ namespace BackendTicketSystem.Controllers
 
                     // update Ticket
                     currentTicket.Subject = ticket.Subject;
-                    currentTicket.Description = ticket.Description;
                     currentTicket.PriorityId = ticket.PriorityId;
                     currentTicket.ProjectId = ticket.ProjectId;
                     currentTicket.TicketTypeId = ticket.TicketTypeId;
