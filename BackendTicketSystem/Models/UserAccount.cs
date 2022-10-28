@@ -17,6 +17,7 @@ namespace BackendTicketSystem.Models
             TicketModifiedByNavigations = new HashSet<Ticket>();
             TicketTypeCreatedByNavigations = new HashSet<TicketType>();
             TicketTypeModifiedByNavigations = new HashSet<TicketType>();
+            UserAccountTokens = new HashSet<UserAccountToken>();
         }
 
         public int Id { get; set; }
@@ -48,5 +49,6 @@ namespace BackendTicketSystem.Models
         public virtual ICollection<Ticket> TicketModifiedByNavigations { get; set; }
         public virtual ICollection<TicketType> TicketTypeCreatedByNavigations { get; set; }
         public virtual ICollection<TicketType> TicketTypeModifiedByNavigations { get; set; }
+        public virtual ICollection<UserAccountToken> UserAccountTokens { get; set; }
     }
 }

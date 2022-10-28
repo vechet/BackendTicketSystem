@@ -27,6 +27,7 @@ namespace BackendTicketSystem.Data
         public virtual DbSet<TicketActionFile> TicketActionFiles { get; set; } = null!;
         public virtual DbSet<TicketType> TicketTypes { get; set; } = null!;
         public virtual DbSet<UserAccount> UserAccounts { get; set; } = null!;
+        public virtual DbSet<UserAccountToken> UserAccountTokens { get; set; } = null!;
         public virtual DbSet<UserRole> UserRoles { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -34,7 +35,7 @@ namespace BackendTicketSystem.Data
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-R1KJCVP;Database=BackendTicketSystem; Integrated Security=false;User ID=sa;Password=123;");
+                optionsBuilder.UseSqlServer("Data Source=localhost;Database=BackendTicketSystem; Integrated Security=false;User ID=sa;Password=MyPass@word;");
             }
         }
 
@@ -389,6 +390,17 @@ namespace BackendTicketSystem.Data
                     .HasForeignKey(d => d.UserRoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UserAccount_UserRole");
+            });
+
+            modelBuilder.Entity<UserAccountToken>(entity =>
+            {
+                entity.ToTable("UserAccountToken");
+
+                entity.HasOne(d => d.UserAccount)
+                    .WithMany(p => p.UserAccountTokens)
+                    .HasForeignKey(d => d.UserAccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserAccountToken_UserAccount");
             });
 
             modelBuilder.Entity<UserRole>(entity =>

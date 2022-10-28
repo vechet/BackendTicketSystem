@@ -24,11 +24,11 @@
     <None Remove="Microsoft.EntityFrameworkCore.SqlServer" />
     <None Remove="Microsoft.EntityFrameworkCore.Design" />
     <None Remove="Microsoft.EntityFrameworkCore.Tools" />
-    <None Remove="CustomModels\" />
-    <None Remove="Helpers\" />
+     <None Remove="CustomModels\" />
+   <None Remove="Helpers\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="CustomModels\" />
+  <Folder Include="CustomModels\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Helpers\Resources.resx">
