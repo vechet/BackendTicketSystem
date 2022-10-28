@@ -7,7 +7,8 @@ namespace BackendTicketSystem.Models
     {
         public GlobalParam()
         {
-            Tickets = new HashSet<Ticket>();
+            TicketPriorities = new HashSet<Ticket>();
+            TicketTransactionTypeNavigations = new HashSet<Ticket>();
         }
 
         public int Id { get; set; }
@@ -18,6 +19,7 @@ namespace BackendTicketSystem.Models
         public short StatusId { get; set; }
 
         public virtual Status Status { get; set; } = null!;
-        public virtual ICollection<Ticket> Tickets { get; set; }
+        public virtual ICollection<Ticket> TicketPriorities { get; set; }
+        public virtual ICollection<Ticket> TicketTransactionTypeNavigations { get; set; }
     }
 }

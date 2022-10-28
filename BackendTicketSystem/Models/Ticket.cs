@@ -12,11 +12,14 @@ namespace BackendTicketSystem.Models
 
         public int Id { get; set; }
         public string Subject { get; set; } = null!;
-        public string Description { get; set; } = null!;
         public int PriorityId { get; set; }
         public int ProjectId { get; set; }
         public int TicketTypeId { get; set; }
         public bool Severity { get; set; }
+        public int TransactionType { get; set; }
+        public int OpennedBy { get; set; }
+        public DateTime OpennedDate { get; set; }
+        public DateTime? DueDate { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public int? ModifiedBy { get; set; }
@@ -30,6 +33,7 @@ namespace BackendTicketSystem.Models
         public virtual Project Project { get; set; } = null!;
         public virtual Status Status { get; set; } = null!;
         public virtual TicketType TicketType { get; set; } = null!;
+        public virtual GlobalParam TransactionTypeNavigation { get; set; } = null!;
         public virtual ICollection<TicketAction> TicketActions { get; set; }
     }
 }

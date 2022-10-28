@@ -224,9 +224,11 @@ namespace BackendTicketSystem.Data
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
-                entity.Property(e => e.Description).HasMaxLength(500);
+                entity.Property(e => e.DueDate).HasColumnType("datetime");
 
                 entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.OpennedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.StatusId).HasDefaultValueSql("((1))");
 
@@ -246,10 +248,10 @@ namespace BackendTicketSystem.Data
                     .HasConstraintName("FK_Ticket_ModifiedBy_UserAccount");
 
                 entity.HasOne(d => d.Priority)
-                    .WithMany(p => p.Tickets)
+                    .WithMany(p => p.TicketPriorities)
                     .HasForeignKey(d => d.PriorityId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Ticket_GlobalParam");
+                    .HasConstraintName("FK_Ticket_Priority_GlobalParam");
 
                 entity.HasOne(d => d.Project)
                     .WithMany(p => p.Tickets)
@@ -268,6 +270,12 @@ namespace BackendTicketSystem.Data
                     .HasForeignKey(d => d.TicketTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Ticket_TicketType");
+
+                entity.HasOne(d => d.TransactionTypeNavigation)
+                    .WithMany(p => p.TicketTransactionTypeNavigations)
+                    .HasForeignKey(d => d.TransactionType)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Ticket_TransactionType_GlobalParam");
             });
 
             modelBuilder.Entity<TicketAction>(entity =>
