@@ -56,7 +56,8 @@ namespace BackendTicketSystem.Controllers
                         TicketId = z.TicketId,
                         Description=z.Description,
                         UserId = z.UserId,
-                        TransactionDate= z.TransactionDate
+                        UserName = _db.UserAccounts.FirstOrDefault(u => u.Id == z.UserId).FullName,
+                        TransactionDate = z.TransactionDate
                     }).ToList()
                 }).ToList();
 
@@ -99,7 +100,7 @@ namespace BackendTicketSystem.Controllers
                     PriorityId=ticket.PriorityId,
                     ProjectId = ticket.ProjectId,
                     TicketTypeId = ticket.TicketTypeId,
-                    Severity = ticket.Severity,
+                    Severity = ticket.Severity ?? false,
                     TransactionType = _db.GlobalParams.FirstOrDefault(x => x.Type == "TicketxxxTransactionType").Id,
                     DueDate = ticket.DueDate,
                     //CreatedBy = GlobalFunction.GetCurrentUserId(),
@@ -288,9 +289,8 @@ namespace BackendTicketSystem.Controllers
                         TicketId = z.TicketId,
                         Description = z.Description,
                         UserId = z.UserId,
+                        UserName = _db.UserAccounts.FirstOrDefault(u => u.Id == z.UserId).FullName,
                         TransactionDate = z.TransactionDate,
-                        OpennedBy = z.Ticket.OpennedBy,
-                        OpennedByName=_db.UserAccounts.FirstOrDefault(u => u.Id == x.OpennedBy).FullName,
                     }).OrderByDescending(z=>z.Id).ToList()
                 }).FirstOrDefault();
 
@@ -309,6 +309,63 @@ namespace BackendTicketSystem.Controllers
             }
         }
 
+        [HttpPost("ReplyTicket")]
+        public ApiOutput<ReplyTicketCustomModel> ReplyTicket([FromBody] ReplyTicketCustomModel replyTicket)
+        {
+            try
+            {
+                var result = new ApiOutput<ReplyTicketCustomModel>();
+
+                var newTicketAction = new TicketAction
+                {
+                    TicketId = replyTicket.TicketId,
+                    Description = replyTicket.Description,
+                    UserId = 2,
+                    TransactionDate = GlobalFunction.GetCurrentDateTime()
+                };
+                _db.TicketActions.Add(newTicketAction);
+                _db.SaveChanges();
+
+                result.Success = true;
+                result.Message = "Replied Ticket successfully!";
+                result.Data = replyTicket;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var result = new ApiOutput<ReplyTicketCustomModel>();
+                result.Success = false;
+                result.Message = ex.Message.ToString();
+                result.Data = null;
+                return result;
+            }
+        }
+
+        [HttpPost("UpdateTicketTransactionType")]
+        public ApiOutput<UpdateTicketTransactionTypeCustomModel> UpdateTicketTransactionType([FromBody] UpdateTicketTransactionTypeCustomModel ticket)
+        {
+            try
+            {
+                var result = new ApiOutput<UpdateTicketTransactionTypeCustomModel>();
+
+                var currentTicket = _db.Tickets.Find(ticket.TicketId);
+                currentTicket.TransactionType = ticket.TransactionType;
+                _db.SaveChanges();
+
+                result.Success = true;
+                result.Message = "Updated successfully!";
+                result.Data = ticket;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var result = new ApiOutput<UpdateTicketTransactionTypeCustomModel>();
+                result.Success = false;
+                result.Message = ex.Message.ToString();
+                result.Data = null;
+                return result;
+            }
+        }
     }
 }
 

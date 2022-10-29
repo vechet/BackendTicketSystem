@@ -32,10 +32,9 @@ namespace BackendTicketSystem.CustomModels
         public int Id { get; set; }
         public int TicketId { get; set; }
         public int UserId { get; set; }
+        public string UserName { get; set; } = null!;
         public string Description { get; set; } = null!;
         public DateTime TransactionDate { get; set; }
-        public int OpennedBy { get; set; }
-        public string OpennedByName { get; set; } = null!;
     }
 
     public class CreateTicketCustomModel
@@ -45,8 +44,8 @@ namespace BackendTicketSystem.CustomModels
         public int PriorityId { get; set; }
         public int ProjectId { get; set; }
         public int TicketTypeId { get; set; }
-        public bool Severity { get; set; }
-        public int TransactionType { get; set; }
+        public bool? Severity { get; set; }
+        public int? TransactionType { get; set; }
         public DateTime? DueDate { get; set; }
         public short StatusId { get; set; }
     }
@@ -104,5 +103,20 @@ namespace BackendTicketSystem.CustomModels
         public int Version { get; set; }
         public List<TicketActionCustomModel> TicketActionList { get; set; }
     }
+
+    public class ReplyTicketCustomModel
+    {
+        public int TicketId { get; set; }
+        //public int UserId { get; set; }
+        public string Description { get; set; } = null!;
+        public DateTime? TransactionDate { get; set; }
+    }
+
+    public class UpdateTicketTransactionTypeCustomModel
+    {
+        public int TicketId { get; set; }
+        public int TransactionType { get; set; }
+    }
+
 }
 
