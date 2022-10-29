@@ -291,7 +291,6 @@ namespace BackendTicketSystem.Controllers
                         TransactionDate = z.TransactionDate,
                         OpennedBy = z.Ticket.OpennedBy,
                         OpennedByName=_db.UserAccounts.FirstOrDefault(u => u.Id == x.OpennedBy).FullName,
-                        OpennedDate = z.Ticket.OpennedDate,
                     }).OrderByDescending(z=>z.Id).ToList()
                 }).FirstOrDefault();
 

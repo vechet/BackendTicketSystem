@@ -36,7 +36,6 @@ namespace BackendTicketSystem.CustomModels
         public DateTime TransactionDate { get; set; }
         public int OpennedBy { get; set; }
         public string OpennedByName { get; set; } = null!;
-        public DateTime OpennedDate { get; set; }
     }
 
     public class CreateTicketCustomModel
