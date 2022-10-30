@@ -29,6 +29,7 @@ namespace BackendTicketSystem.Models
 
         public virtual UserAccount CreatedByNavigation { get; set; } = null!;
         public virtual UserAccount? ModifiedByNavigation { get; set; }
+        public virtual UserAccount OpennedByNavigation { get; set; } = null!;
         public virtual GlobalParam Priority { get; set; } = null!;
         public virtual Project Project { get; set; } = null!;
         public virtual Status Status { get; set; } = null!;

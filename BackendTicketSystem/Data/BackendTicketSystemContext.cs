@@ -232,7 +232,7 @@ namespace BackendTicketSystem.Data
 
                 entity.Property(e => e.StatusId).HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.Subject).HasMaxLength(100);
+                entity.Property(e => e.Subject).HasMaxLength(500);
 
                 entity.Property(e => e.Version).HasDefaultValueSql("((1))");
 
@@ -246,6 +246,12 @@ namespace BackendTicketSystem.Data
                     .WithMany(p => p.TicketModifiedByNavigations)
                     .HasForeignKey(d => d.ModifiedBy)
                     .HasConstraintName("FK_Ticket_ModifiedBy_UserAccount");
+
+                entity.HasOne(d => d.OpennedByNavigation)
+                    .WithMany(p => p.TicketOpennedByNavigations)
+                    .HasForeignKey(d => d.OpennedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Ticket_OpennedBy_UserAccount");
 
                 entity.HasOne(d => d.Priority)
                     .WithMany(p => p.TicketPriorities)
@@ -291,6 +297,12 @@ namespace BackendTicketSystem.Data
                     .HasForeignKey(d => d.TicketId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TicketAction_Ticket");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.TicketActions)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TicketAction_UserAccount");
             });
 
             modelBuilder.Entity<TicketActionFile>(entity =>
@@ -387,6 +399,12 @@ namespace BackendTicketSystem.Data
 
                 entity.Property(e => e.Version).HasDefaultValueSql("((1))");
 
+                entity.HasOne(d => d.Gender)
+                    .WithMany(p => p.UserAccounts)
+                    .HasForeignKey(d => d.GenderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserAccount_GlobalParam");
+
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.UserAccounts)
                     .HasForeignKey(d => d.StatusId)
@@ -430,6 +448,17 @@ namespace BackendTicketSystem.Data
                 entity.Property(e => e.StatusId).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Version).HasDefaultValueSql("((1))");
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.UserRoleCreatedByNavigations)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserRole_CreatedBy_UserAccount");
+
+                entity.HasOne(d => d.ModifiedByNavigation)
+                    .WithMany(p => p.UserRoleModifiedByNavigations)
+                    .HasForeignKey(d => d.ModifiedBy)
+                    .HasConstraintName("FK_UserRole_ModifienBy_UserAccount");
 
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.UserRoles)

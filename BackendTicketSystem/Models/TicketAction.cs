@@ -17,6 +17,7 @@ namespace BackendTicketSystem.Models
         public DateTime TransactionDate { get; set; }
 
         public virtual Ticket Ticket { get; set; } = null!;
+        public virtual UserAccount User { get; set; } = null!;
         public virtual ICollection<TicketActionFile> TicketActionFiles { get; set; }
     }
 }

@@ -20,6 +20,8 @@ namespace BackendTicketSystem.Models
         public short StatusId { get; set; }
         public int Version { get; set; }
 
+        public virtual UserAccount CreatedByNavigation { get; set; } = null!;
+        public virtual UserAccount? ModifiedByNavigation { get; set; }
         public virtual Status Status { get; set; } = null!;
         public virtual ICollection<UserAccount> UserAccounts { get; set; }
     }
