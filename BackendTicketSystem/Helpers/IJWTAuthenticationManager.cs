@@ -23,8 +23,9 @@ namespace BackendTicketSystem.Helpers
 
         public string Authenticate(string username, string password)
         {
-            var decryptPassword = GlobalFunction.DecryptStringAes(password);
-            if (!_db.UserAccounts.Any(u => u.UserName == username && u.Password == decryptPassword))
+            var user = _db.UserAccounts.FirstOrDefault(x => x.UserName == username);
+            var decryptPassword = GlobalFunction.Decrypt(user.Password);
+            if (!_db.UserAccounts.Any(u => u.UserName == username && decryptPassword == password))
             {
                 return null;
             }

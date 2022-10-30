@@ -66,6 +66,11 @@ namespace BackendTicketSystem.CustomModels
         public int Version { get; set; }
     }
 
+    public class DeleteTicketCustomModel
+    {
+        public int Id { get; set; }
+    }
+
     public class TicketPriorityCustomModel
     {
         public int Id { get; set; }

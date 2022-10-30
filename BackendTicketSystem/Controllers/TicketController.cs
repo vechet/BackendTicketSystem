@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using BackendTicketSystem.CustomModels;
@@ -372,6 +373,36 @@ namespace BackendTicketSystem.Controllers
             catch (Exception ex)
             {
                 var result = new ApiOutput<UpdateTicketTransactionTypeCustomModel>();
+                result.Success = false;
+                result.Message = ex.Message.ToString();
+                result.Data = null;
+                return result;
+            }
+        }
+
+        [HttpPost("TicketDelete")]
+        public ApiOutput<DeleteTicketCustomModel> TicketDelete([FromBody] DeleteTicketCustomModel ticket)
+        {
+            try
+            {
+                var result = new ApiOutput<DeleteTicketCustomModel>();
+                var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var currentUserId = GlobalFunction.GetCurrentUserId(_db, _bearer_token);
+
+                var currentTicket = _db.Tickets.Find(ticket.Id);
+                currentTicket.StatusId = _db.Statuses.FirstOrDefault(x => x.KeyName == "Inactive").Id;
+                currentTicket.ModifiedBy = currentUserId;
+                currentTicket.ModifiedDate = GlobalFunction.GetCurrentDateTime();
+                _db.SaveChanges();
+
+                result.Success = true;
+                result.Message = "Ticket delete successfully!";
+                result.Data = ticket;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var result = new ApiOutput<DeleteTicketCustomModel>();
                 result.Success = false;
                 result.Message = ex.Message.ToString();
                 result.Data = null;
