@@ -30,5 +30,11 @@ namespace BackendTicketSystem.CustomModels
         public short StatusId { get; set; }
         public int Version { get; set; }
     }
+
+    public class LoginUserAccountCustomModel
+    {
+        public string UserName { get; set; } = null!;
+        public string Password { get; set; } = null!;
+    }
 }
 

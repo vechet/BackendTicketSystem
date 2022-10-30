@@ -101,7 +101,7 @@ namespace BackendTicketSystem.Controllers
                 var newTicket = new Ticket
                 {
                     Subject = ticket.Subject,
-                    PriorityId=ticket.PriorityId,
+                    PriorityId = ticket.PriorityId,
                     ProjectId = ticket.ProjectId,
                     TicketTypeId = ticket.TicketTypeId,
                     Severity = ticket.Severity ?? false,
@@ -112,14 +112,14 @@ namespace BackendTicketSystem.Controllers
                     CreatedBy = currentUserId,
                     CreatedDate = GlobalFunction.GetCurrentDateTime(),
                     Version = 1,
-                    StatusId = ticket.StatusId
+                    StatusId = _db.Statuses.FirstOrDefault(x => x.KeyName == "Active").Id,
                 };
                 _db.Tickets.Add(newTicket);
 
                 var newTicketAction = new TicketAction
                 {
                     Description = ticket.Description,
-                    UserId = 11,
+                    UserId = currentUserId,
                     TransactionDate = GlobalFunction.GetCurrentDateTime()
 
                 };

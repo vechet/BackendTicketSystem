@@ -1,4 +1,5 @@
-﻿using BackendTicketSystem.Helpers;
+﻿using BackendTicketSystem.CustomModels;
+using BackendTicketSystem.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,37 +18,17 @@ namespace BackendTicketSystem.Controllers
             this.jWTAuthenticationManager = jWTAuthenticationManager;
         }
 
-        // GET: api/Name
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/Name/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
+      
         [AllowAnonymous]
-        [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody] UserCred userCred)
+        [HttpPost("Login")]
+        public IActionResult Login([FromBody] LoginUserAccountCustomModel userCred)
         {
-            var token = jWTAuthenticationManager.Authenticate(userCred.Username, userCred.Password);
+            var token = jWTAuthenticationManager.Authenticate(userCred.UserName, userCred.Password);
 
             if (token == null)
                 return Unauthorized();
 
             return Ok(token);
         }
-        
-    }
-
-    public class UserCred
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
     }
 }

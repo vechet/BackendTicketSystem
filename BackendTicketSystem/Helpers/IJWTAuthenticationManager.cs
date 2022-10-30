@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using BackendTicketSystem.Data;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -12,12 +13,7 @@ namespace BackendTicketSystem.Helpers
 
     public class JWTAuthenticationManager : IJWTAuthenticationManager
     {
-        IDictionary<string, string> users = new Dictionary<string, string>
-        {
-            { "test1", "password1" },
-            { "test2", "password2" }
-        };
-
+        private readonly BackendTicketSystemContext _db = new BackendTicketSystemContext();
         private readonly string key;
 
         public JWTAuthenticationManager(string key)
@@ -27,7 +23,8 @@ namespace BackendTicketSystem.Helpers
 
         public string Authenticate(string username, string password)
         {
-            if (!users.Any(u => u.Key == username && u.Value == password))
+            var decryptPassword = GlobalFunction.DecryptStringAes(password);
+            if (!_db.UserAccounts.Any(u => u.UserName == username && u.Password == decryptPassword))
             {
                 return null;
             }
