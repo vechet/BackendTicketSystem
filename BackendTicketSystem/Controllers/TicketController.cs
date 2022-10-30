@@ -7,6 +7,7 @@ using BackendTicketSystem.CustomModels;
 using BackendTicketSystem.Data;
 using BackendTicketSystem.Helpers;
 using BackendTicketSystem.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 
@@ -14,6 +15,7 @@ using Microsoft.VisualBasic;
 
 namespace BackendTicketSystem.Controllers
 {
+    [Authorize]
     [Route("api/v1")]
     [ApiController]
     public class TicketController : ControllerBase

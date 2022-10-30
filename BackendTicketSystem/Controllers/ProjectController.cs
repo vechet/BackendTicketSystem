@@ -2,6 +2,7 @@
 using BackendTicketSystem.Data;
 using BackendTicketSystem.Helpers;
 using BackendTicketSystem.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
@@ -9,6 +10,7 @@ using Enum = BackendTicketSystem.Helpers.Enum;
 
 namespace BackendTicketSystem.Controllers
 {
+    [Authorize]
     [Route("api/v1")]
     [ApiController]
     public class ProjectController : ControllerBase
