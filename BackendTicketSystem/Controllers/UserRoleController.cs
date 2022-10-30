@@ -8,6 +8,7 @@ using BackendTicketSystem.Helpers;
 using BackendTicketSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -65,6 +66,8 @@ namespace BackendTicketSystem.Controllers
             try
             {
                 var result = new ApiOutput<CreateUserRoleCustomModel>();
+                var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var currentUserId = GlobalFunction.GetCurrentUserId(_db, _bearer_token);
 
                 // check duplicate name
                 if (_db.UserRoles.Any(x => x.Name.ToLower() == userRole.Name.ToLower()))
@@ -80,8 +83,7 @@ namespace BackendTicketSystem.Controllers
                 {
                     Name = userRole.Name,
                     Memo = userRole.Memo,
-                    //CreatedBy = GlobalFunction.GetCurrentUserId(),
-                    CreatedBy = 11,
+                    CreatedBy = currentUserId,
                     CreatedDate = GlobalFunction.GetCurrentDateTime(),
                     Version = 1,
                     StatusId = userRole.StatusId
@@ -110,6 +112,8 @@ namespace BackendTicketSystem.Controllers
             try
             {
                 var result = new ApiOutput<UpdateUserRoleCustomModel>();
+                var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var currentUserId = GlobalFunction.GetCurrentUserId(_db, _bearer_token);
 
                 var currentUserRole = _db.UserRoles.Find(userRole.Id);
                 if (currentUserRole.Version == userRole.Version)
@@ -127,8 +131,7 @@ namespace BackendTicketSystem.Controllers
                     currentUserRole.Name = userRole.Name;
                     currentUserRole.Memo = userRole.Memo;
                     currentUserRole.StatusId = userRole.StatusId;
-                    currentUserRole.ModifiedBy = 11;
-                    //currentProject.ModifiedBy = DefaultFuntion.GetCurrentUserId();
+                    currentUserRole.ModifiedBy = currentUserId;
                     currentUserRole.ModifiedDate = GlobalFunction.GetCurrentDateTime();
                     currentUserRole.Version = userRole.Version + 1;
                     _db.SaveChanges();

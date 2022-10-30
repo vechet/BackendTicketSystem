@@ -8,6 +8,7 @@ using BackendTicketSystem.Helpers;
 using BackendTicketSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -65,6 +66,8 @@ namespace BackendTicketSystem.Controllers
             try
             {
                 var result = new ApiOutput<CreateProjectPackageCustomModel>();
+                var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var currentUserId = GlobalFunction.GetCurrentUserId(_db, _bearer_token);
 
                 // check duplicate name
                 if (_db.ProjectPackages.Any(x => x.Name.ToLower() == projectPackage.Name.ToLower()))
@@ -80,8 +83,7 @@ namespace BackendTicketSystem.Controllers
                 {
                     Name = projectPackage.Name,
                     Memo = projectPackage.Memo,
-                    //CreatedBy = GlobalFunction.GetCurrentUserId(),
-                    CreatedBy = 11,
+                    CreatedBy = currentUserId,
                     CreatedDate = GlobalFunction.GetCurrentDateTime(),
                     Version = 1,
                     StatusId = projectPackage.StatusId
@@ -110,6 +112,8 @@ namespace BackendTicketSystem.Controllers
             try
             {
                 var result = new ApiOutput<UpdateProjectPackageCustomModel>();
+                var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var currentUserId = GlobalFunction.GetCurrentUserId(_db, _bearer_token);
 
                 var currentProjectPackage = _db.ProjectPackages.Find(projectPackage.Id);
                 if (currentProjectPackage.Version == projectPackage.Version)
@@ -127,8 +131,7 @@ namespace BackendTicketSystem.Controllers
                     currentProjectPackage.Name = projectPackage.Name;
                     currentProjectPackage.Memo = projectPackage.Memo;
                     currentProjectPackage.StatusId = projectPackage.StatusId;
-                    currentProjectPackage.ModifiedBy = 11;
-                    //currentProject.ModifiedBy = DefaultFuntion.GetCurrentUserId();
+                    currentProjectPackage.ModifiedBy = currentUserId;
                     currentProjectPackage.ModifiedDate = GlobalFunction.GetCurrentDateTime();
                     currentProjectPackage.Version = projectPackage.Version + 1;
                     _db.SaveChanges();

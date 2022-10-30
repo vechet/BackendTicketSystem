@@ -39,6 +39,7 @@ namespace BackendTicketSystem.CustomModels
 
     public class CreateTicketCustomModel
     {
+        public int? Id { get; set; }
         public string Subject { get; set; } = null!;
         public string Description { get; set; } = null!;
         public int PriorityId { get; set; }
@@ -116,6 +117,7 @@ namespace BackendTicketSystem.CustomModels
     {
         public int TicketId { get; set; }
         public int TransactionType { get; set; }
+        public int Version { get; set; }
     }
 
 }

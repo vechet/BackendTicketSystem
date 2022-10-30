@@ -8,6 +8,7 @@ using BackendTicketSystem.Helpers;
 using BackendTicketSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -65,6 +66,8 @@ namespace BackendTicketSystem.Controllers
             try
             {
                 var result = new ApiOutput<CreateUserAccountCustomModel>();
+                var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var currentUserId = GlobalFunction.GetCurrentUserId(_db, _bearer_token);
 
                 // check duplicate name
                 if (_db.UserAccounts.Any(x => x.UserName.ToLower() == userAccount.UserName.ToLower()))
@@ -80,8 +83,7 @@ namespace BackendTicketSystem.Controllers
                 {
                     UserName = userAccount.UserName,
                     Memo = userAccount.Memo,
-                    //CreatedBy = GlobalFunction.GetCurrentUserId(),
-                    CreatedBy = 11,
+                    CreatedBy = currentUserId,
                     CreatedDate = GlobalFunction.GetCurrentDateTime(),
                     Version = 1,
                     StatusId = userAccount.StatusId
@@ -110,6 +112,8 @@ namespace BackendTicketSystem.Controllers
             try
             {
                 var result = new ApiOutput<UpdateUserAccountCustomModel>();
+                var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var currentUserId = GlobalFunction.GetCurrentUserId(_db, _bearer_token);
 
                 var currentUserAccount = _db.UserAccounts.Find(userAccount.Id);
                 if (currentUserAccount.Version == userAccount.Version)
@@ -127,8 +131,7 @@ namespace BackendTicketSystem.Controllers
                     currentUserAccount.UserName = userAccount.UserName;
                     currentUserAccount.Memo = userAccount.Memo;
                     currentUserAccount.StatusId = userAccount.StatusId;
-                    currentUserAccount.ModifiedBy = 11;
-                    //currentProject.ModifiedBy = DefaultFuntion.GetCurrentUserId();
+                    currentUserAccount.ModifiedBy = currentUserId;
                     currentUserAccount.ModifiedDate = GlobalFunction.GetCurrentDateTime();
                     currentUserAccount.Version = userAccount.Version + 1;
                     _db.SaveChanges();

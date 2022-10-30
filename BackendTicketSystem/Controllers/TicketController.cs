@@ -9,6 +9,7 @@ using BackendTicketSystem.Helpers;
 using BackendTicketSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using Microsoft.VisualBasic;
 
 // For more information on enabling Web API for empty Tickets, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -81,10 +82,11 @@ namespace BackendTicketSystem.Controllers
         [HttpPost("TicketCreate")]
         public ApiOutput<CreateTicketCustomModel> Post([FromBody] CreateTicketCustomModel ticket)
         {
-
             try
             {
                 var result = new ApiOutput<CreateTicketCustomModel>();
+                var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var currentUserId = GlobalFunction.GetCurrentUserId(_db,_bearer_token);
 
                 // check duplicate name
                 if (_db.Tickets.Any(x => x.Subject.ToLower() == ticket.Subject.ToLower()))
@@ -105,10 +107,9 @@ namespace BackendTicketSystem.Controllers
                     Severity = ticket.Severity ?? false,
                     TransactionType = _db.GlobalParams.FirstOrDefault(x => x.Type == "TicketxxxTransactionType").Id,
                     DueDate = ticket.DueDate,
-                    //CreatedBy = GlobalFunction.GetCurrentUserId(),
-                    OpennedBy = 11,
+                    OpennedBy = currentUserId,
                     OpennedDate = GlobalFunction.GetCurrentDateTime(),
-                    CreatedBy = 11,
+                    CreatedBy = currentUserId,
                     CreatedDate = GlobalFunction.GetCurrentDateTime(),
                     Version = 1,
                     StatusId = ticket.StatusId
@@ -125,6 +126,7 @@ namespace BackendTicketSystem.Controllers
                 newTicket.TicketActions.Add(newTicketAction);
                 _db.SaveChanges();
 
+                ticket.Id = newTicket.Id;
                 result.Success = true;
                 result.Message = "Created successfully!";
                 result.Data = ticket;
@@ -146,6 +148,8 @@ namespace BackendTicketSystem.Controllers
             try
             {
                 var result = new ApiOutput<UpdateTicketCustomModel>();
+                var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var currentUserId = GlobalFunction.GetCurrentUserId(_db, _bearer_token);
 
                 var currentTicket = _db.Tickets.Find(ticket.Id);
                 if (currentTicket.Version == ticket.Version)
@@ -168,8 +172,7 @@ namespace BackendTicketSystem.Controllers
                     currentTicket.TransactionType = ticket.TransactionType;
                     currentTicket.DueDate = ticket.DueDate;
                     currentTicket.StatusId = ticket.StatusId;
-                    currentTicket.ModifiedBy = 11;
-                    //currentTicket.ModifiedBy = DefaultFuntion.GetCurrentUserId();
+                    currentTicket.ModifiedBy = currentUserId;
                     currentTicket.ModifiedDate = GlobalFunction.GetCurrentDateTime();
                     currentTicket.Version = ticket.Version + 1;
                     _db.SaveChanges();
@@ -317,12 +320,14 @@ namespace BackendTicketSystem.Controllers
             try
             {
                 var result = new ApiOutput<ReplyTicketCustomModel>();
+                var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var currentUserId = GlobalFunction.GetCurrentUserId(_db, _bearer_token);
 
                 var newTicketAction = new TicketAction
                 {
                     TicketId = replyTicket.TicketId,
                     Description = replyTicket.Description,
-                    UserId = 2,
+                    UserId = currentUserId,
                     TransactionDate = GlobalFunction.GetCurrentDateTime()
                 };
                 _db.TicketActions.Add(newTicketAction);
@@ -349,9 +354,14 @@ namespace BackendTicketSystem.Controllers
             try
             {
                 var result = new ApiOutput<UpdateTicketTransactionTypeCustomModel>();
+                var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var currentUserId = GlobalFunction.GetCurrentUserId(_db, _bearer_token);
 
                 var currentTicket = _db.Tickets.Find(ticket.TicketId);
                 currentTicket.TransactionType = ticket.TransactionType;
+                currentTicket.ModifiedBy = currentUserId;
+                currentTicket.ModifiedDate = GlobalFunction.GetCurrentDateTime();
+                currentTicket.Version = ticket.Version + 1;
                 _db.SaveChanges();
 
                 result.Success = true;

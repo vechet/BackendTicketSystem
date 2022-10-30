@@ -8,6 +8,7 @@ using BackendTicketSystem.Helpers;
 using BackendTicketSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 
 // For more information on enabling Web API for empty Tickets, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -65,6 +66,8 @@ namespace BackendTicketSystem.Controllers
             try
             {
                 var result = new ApiOutput<CreateTicketTypeCustomModel>();
+                var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var currentUserId = GlobalFunction.GetCurrentUserId(_db, _bearer_token);
 
                 // check duplicate name
                 if (_db.TicketTypes.Any(x => x.Name.ToLower() == ticketType.Name.ToLower()))
@@ -80,8 +83,7 @@ namespace BackendTicketSystem.Controllers
                 {
                     Name = ticketType.Name,
                     Memo = ticketType.Memo,
-                    //CreatedBy = GlobalFunction.GetCurrentUserId(),
-                    CreatedBy = 11,
+                    CreatedBy = currentUserId,
                     CreatedDate = GlobalFunction.GetCurrentDateTime(),
                     Version = 1,
                     StatusId = ticketType.StatusId
@@ -110,6 +112,8 @@ namespace BackendTicketSystem.Controllers
             try
             {
                 var result = new ApiOutput<UpdateTicketTypeCustomModel>();
+                var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var currentUserId = GlobalFunction.GetCurrentUserId(_db, _bearer_token);
 
                 var currentTicketType = _db.TicketTypes.Find(ticketType.Id);
                 if (currentTicketType.Version == ticketType.Version)
@@ -127,8 +131,7 @@ namespace BackendTicketSystem.Controllers
                     currentTicketType.Name = ticketType.Name;
                     currentTicketType.Memo = ticketType.Memo;
                     currentTicketType.StatusId = ticketType.StatusId;
-                    currentTicketType.ModifiedBy = 11;
-                    //currentTicket.ModifiedBy = DefaultFuntion.GetCurrentUserId();
+                    currentTicketType.ModifiedBy = currentUserId;
                     currentTicketType.ModifiedDate = GlobalFunction.GetCurrentDateTime();
                     currentTicketType.Version = ticketType.Version + 1;
                     _db.SaveChanges();

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using BackendTicketSystem.Data;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 namespace BackendTicketSystem.Helpers
 {
@@ -20,6 +21,17 @@ namespace BackendTicketSystem.Helpers
                                       .SelectMany(x => x.Errors)
                                        .Select(x => x.ErrorMessage))
             };
+        }
+
+        public static int GetCurrentUserId(BackendTicketSystemContext db = null, string token = "")
+        {
+            if (db == null)
+            {
+                db = new BackendTicketSystemContext();
+            }
+            var userIdList = db.UserAccountTokens.Where(x => x.Token == token).Select(x => x.UserAccountId).ToList();
+            var currentUser = db.UserAccounts.Where(x => userIdList.Contains(x.Id)).ToList();
+            return currentUser[0].Id;
         }
     }
 }

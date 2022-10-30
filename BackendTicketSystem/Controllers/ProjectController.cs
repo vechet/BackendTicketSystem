@@ -5,6 +5,7 @@ using BackendTicketSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using Enum = BackendTicketSystem.Helpers.Enum;
 
@@ -68,6 +69,8 @@ namespace BackendTicketSystem.Controllers
             try
             {
                 var result = new ApiOutput<CreateProjectCustomModel>();
+                var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var currentUserId = GlobalFunction.GetCurrentUserId(_db, _bearer_token);
 
                 // check duplicate name
                 if (_db.Projects.Any(x => x.Name.ToLower() == project.Name.ToLower()))
@@ -87,8 +90,7 @@ namespace BackendTicketSystem.Controllers
                     WebsiteUrl = project.WebsiteUrl,
                     ApplicationName = project.ApplicationName,
                     DatabaseName = project.DatabaseName,
-                    //CreatedBy = GlobalFunction.GetCurrentUserId(),
-                    CreatedBy = 11,
+                    CreatedBy = currentUserId,
                     CreatedDate = GlobalFunction.GetCurrentDateTime(),
                     Version = 1,
                     StatusId = project.StatusId
@@ -117,6 +119,8 @@ namespace BackendTicketSystem.Controllers
             try
             {
                 var result = new ApiOutput<UpdateProjectCustomModel>();
+                var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var currentUserId = GlobalFunction.GetCurrentUserId(_db, _bearer_token);
 
                 var currentProject = _db.Projects.Find(project.Id);
                 if (currentProject.Version == project.Version)
@@ -138,8 +142,7 @@ namespace BackendTicketSystem.Controllers
                     currentProject.ApplicationName = project.ApplicationName;
                     currentProject.DatabaseName = project.DatabaseName;
                     currentProject.StatusId = project.StatusId;
-                    currentProject.ModifiedBy = 11;
-                    //currentProject.ModifiedBy = DefaultFuntion.GetCurrentUserId();
+                    currentProject.ModifiedBy = currentUserId;
                     currentProject.ModifiedDate = GlobalFunction.GetCurrentDateTime();
                     currentProject.Version = project.Version + 1;
                     _db.SaveChanges();
