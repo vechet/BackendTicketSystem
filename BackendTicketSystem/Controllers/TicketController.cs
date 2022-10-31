@@ -90,7 +90,7 @@ namespace BackendTicketSystem.Controllers
                 var currentUserId = GlobalFunction.GetCurrentUserId(_db,_bearer_token);
 
                 // check duplicate name
-                if (_db.Tickets.Any(x => x.Subject.ToLower() == ticket.Subject.ToLower()))
+                if (_db.Tickets.Any(x => x.Subject.ToLower() == ticket.Subject.ToLower() && x.Status.KeyName == "Active"))
                 {
                     result.Success = false;
                     result.Message = string.Format(Resource.ValidationMessage_Duplicate, Resource.Name);
@@ -143,8 +143,8 @@ namespace BackendTicketSystem.Controllers
             }
         }
 
-        [HttpPut("TicketUpdate")]
-        public ApiOutput<UpdateTicketCustomModel> Put([FromBody] UpdateTicketCustomModel ticket)
+        [HttpPost("TicketUpdate")]
+        public ApiOutput<UpdateTicketCustomModel> TicketUpdate([FromBody] UpdateTicketCustomModel ticket)
         {
             try
             {
@@ -156,7 +156,7 @@ namespace BackendTicketSystem.Controllers
                 if (currentTicket.Version == ticket.Version)
                 {
                     // check duplicate name
-                    if (_db.Tickets.Any(x => x.Subject.ToLower() == currentTicket.Subject.ToLower() && x.Id != ticket.Id))
+                    if (_db.Tickets.Any(x => x.Subject.ToLower() == currentTicket.Subject.ToLower() && x.Id != ticket.Id && x.Status.KeyName == "Active"))
                     {
                         result.Success = false;
                         result.Message = string.Format(Resource.ValidationMessage_Duplicate, Resource.Name);
