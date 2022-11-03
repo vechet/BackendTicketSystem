@@ -69,5 +69,36 @@ namespace BackendTicketSystem.Controllers
                 return result;
             }
         }
+
+        [HttpGet("GetCurrentUser")]
+        public ApiOutput<GetCurrentUserCustomModel> UserAccounts()
+        {
+            try
+            {
+                var result = new ApiOutput<GetCurrentUserCustomModel>();
+                var _bearer_token = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var currentUserId = GlobalFunction.GetCurrentUserId(_db, _bearer_token);
+
+                var userAccounts = _db.UserAccounts.Where(x => x.Status.KeyName == "Active" && x.Id == currentUserId).Select(x => new GetCurrentUserCustomModel
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    Email= x.Email
+                }).FirstOrDefault();
+
+                result.Success = true;
+                result.Message = "Fetch data successfully!";
+                result.Data = userAccounts;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var result = new ApiOutput<GetCurrentUserCustomModel>();
+                result.Success = false;
+                result.Message = ex.Message.ToString();
+                result.Data = null;
+                return result;
+            }
+        }
     }
 }
