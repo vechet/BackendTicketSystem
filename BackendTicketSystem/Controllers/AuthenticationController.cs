@@ -1,4 +1,5 @@
-﻿using BackendTicketSystem.CustomModels;
+﻿using System.Collections.Generic;
+using BackendTicketSystem.CustomModels;
 using BackendTicketSystem.Data;
 using BackendTicketSystem.Helpers;
 using BackendTicketSystem.Models;
@@ -25,25 +26,48 @@ namespace BackendTicketSystem.Controllers
       
         [AllowAnonymous]
         [HttpPost("Login")]
-        public IActionResult Login([FromBody] LoginUserAccountCustomModel userCred)
+        public ApiOutput<AuthenticationCustomModel> Login([FromBody] LoginUserAccountCustomModel userCred)
         {
-            var token = jWTAuthenticationManager.Authenticate(userCred.UserName, userCred.Password);
-
-            if (token == null)
-                return Unauthorized();
-
-
-            var currentUserAccount = _db.UserAccounts.FirstOrDefault(x => x.UserName == userCred.UserName);
-            //new User Account Token
-            var newUserAccountToken = new UserAccountToken
+            try
             {
-                Token = token,
-                UserAccountId= currentUserAccount.Id
-            };
-            _db.UserAccountTokens.Add(newUserAccountToken);
-            _db.SaveChanges();
+                var result = new ApiOutput<AuthenticationCustomModel>();
+                var newAuthentication = new AuthenticationCustomModel();
 
-            return Ok(token);
+                var token = jWTAuthenticationManager.Authenticate(userCred.UserName, userCred.Password);
+
+                if (token == null)
+                {
+                    //return Unauthorized();
+                    result.Success = false;
+                    result.Message = Unauthorized().ToString();
+                    result.Data = null;
+                    return result;
+                }
+
+                var currentUserAccount = _db.UserAccounts.FirstOrDefault(x => x.UserName == userCred.UserName);
+                //new User Account Token
+                var newUserAccountToken = new UserAccountToken
+                {
+                    Token = token,
+                    UserAccountId = currentUserAccount.Id
+                };
+                _db.UserAccountTokens.Add(newUserAccountToken);
+                _db.SaveChanges();
+
+                newAuthentication.Token = token;
+                result.Success = true;
+                result.Message = "Login successfully!";
+                result.Data = newAuthentication;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var result = new ApiOutput<AuthenticationCustomModel>();
+                result.Success = false;
+                result.Message = ex.Message.ToString();
+                result.Data = null;
+                return result;
+            }
         }
     }
 }
